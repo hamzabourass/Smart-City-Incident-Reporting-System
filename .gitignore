@@ -1,0 +1,64 @@
+ Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio / VS Code
+.vscode/
+.vs/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuget.props
+*.nuget.targets
+
+# ASP.NET-specific
+wwwroot/lib/
+wwwroot/node_modules/
+
+# Logs
+*.log
+logs/
+*.tlog
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Rider
+.idea/
+
+# dotenv files (if used)
+.env
+.env.*
+
+# Optional: secrets (never commit)
+secrets.json
+
+# Publish output
+publish/
+
+# Test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Node (if using Node for frontend assets)
+node_modules/
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Temporary files
+*.tmp
