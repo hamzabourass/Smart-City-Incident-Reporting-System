@@ -7,4 +7,5 @@ public interface ICityRepository : IGenericRepository<City>
 {
     Task<City?> GetByNameAsync(string name);
     Task<IEnumerable<City>> GetCitiesByRegionAsync(string region);
+    Task<City?> SearchByName(string name);
 }

@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SCIRS.Data;
 using SCIRS.Models;
+using SCIRS.Repository.Implementations;
+using SCIRS.Repository.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,11 @@ builder.Services.AddDbContext<ScirsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SCIRSDb"),
     x => x.UseNetTopologySuite()
     ));
+
+
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+
 
 builder.Services.AddCors(options =>
 {
