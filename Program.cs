@@ -22,7 +22,7 @@ builder.Services.AddDbContext<ScirsContext>(options =>
 
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
-
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddCors(options =>
 {
