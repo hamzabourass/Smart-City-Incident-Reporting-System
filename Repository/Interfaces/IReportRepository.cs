@@ -7,7 +7,7 @@ public interface IReportRepository : IGenericRepository<Report>
 {
 
     Task<IEnumerable<Report>> GetReportsByCityId(int id);
-    Task<IEnumerable<Report>> GetReportsByUserId(int id);
+    Task<IEnumerable<Report>> GetReportsByUserId(string id);
     Task<IEnumerable<Report>> GetReportsByStatusAsync(string status);
     Task<IEnumerable<Report>> GetReportsNearLocationAsync(double latitude, double longitude, double radiusKm);
 
