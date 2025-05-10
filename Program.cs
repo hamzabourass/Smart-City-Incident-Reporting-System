@@ -1,12 +1,17 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SCIRS.Data;
 using SCIRS.Models;
+using SCIRS.Profiles;
 using SCIRS.Repository.Implementations;
 using SCIRS.Repository.Interfaces;
+using SCIRS.Services.Implementations;
+using SCIRS.Services.Interfaces;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +24,17 @@ builder.Services.AddDbContext<ScirsContext>(options =>
     x => x.UseNetTopologySuite()
     ));
 
+builder.Services.AddAutoMapper(config => {
+    config.AddProfile<MappingProfile>();
+});
 
+// Repositories
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Services
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddCors(options =>
 {
@@ -44,6 +56,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ScirsContext>()
 .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 
@@ -72,12 +87,18 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 await app.MigrateDbAsync();
+await app.SeedTestDataAsync();
+
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+app.MapOpenApi();
+app.UseSwaggerUI(options =>
 {
-    app.MapOpenApi();
-}
+   options.ConfigObject.Urls = [new UrlDescriptor { Name = "SCIRS v1", Url = "/openapi/v1.json" }]; ;
+});
+
+
 
 app.UseCors("AllowAll");
 
@@ -86,5 +107,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
 app.Run();
 
