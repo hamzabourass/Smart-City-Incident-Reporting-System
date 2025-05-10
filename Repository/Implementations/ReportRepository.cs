@@ -29,6 +29,27 @@ public class ReportRepository : GeniricRepository<Report>, IReportRepository
             .FirstOrDefaultAsync(r => r.Id == id);
     }
 
+    public async Task<IEnumerable<Report>> GetDeletedReportsAsync()
+    {
+        return await _context.Reports
+            .Where(r => r.IsDeleted)
+            .Include(r => r.City)
+            .Include(r => r.CreatedBy)
+            .Include(r => r.AssignedTo)
+            .Include(r => r.DeletedBy)
+            .ToListAsync();
+    }
+    
+    public async Task<Report?> GetReportByIdIncludingDeletedAsync(int id)
+    {
+        return await _context.Reports
+            .Include(r => r.City)
+            .Include(r => r.CreatedBy)
+            .Include(r => r.AssignedTo)
+            .Include(r => r.DeletedBy)
+            .FirstOrDefaultAsync(r => r.Id == id);
+    }
+
     public async Task<IEnumerable<Report>> GetReportsByCityId(int cityId)
     {
         return await _context.Reports

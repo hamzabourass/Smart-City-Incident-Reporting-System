@@ -32,6 +32,13 @@ public class Report
 
     public ICollection<ReportStatusHistory>? StatusHistories { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedAt { get; set; }
+    
+    public string? DeletedById { get; set; }
+    [ForeignKey(nameof(DeletedById))]
+    public User? DeletedBy { get; set; }
+
 
 
 
