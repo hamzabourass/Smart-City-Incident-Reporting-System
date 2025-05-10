@@ -90,4 +90,46 @@ public class ReportService : IReportService
     {
         throw new NotImplementedException();
     }
+
+     public async Task<bool> DeleteReportAsync(int reportId)
+    {
+        var report = await _reportRepository.GetByIdAsync(reportId);
+        if (report == null)
+            return false;
+            
+        _reportRepository.Delete(report);
+        return await _reportRepository.SaveChangesAsync();
+    }
+    
+    public async Task<bool> SoftDeleteReportAsync(int reportId, string deletedById)
+    {
+        var report = await _reportRepository.GetByIdAsync(reportId);
+        if (report == null)
+            return false;
+            
+        var user = await _userRepository.GetByIdAsync(int.Parse(deletedById));
+        if (user == null)
+            return false;
+        
+        report.IsDeleted = true;
+        report.DeletedAt = DateTime.UtcNow;
+        report.DeletedById = deletedById;
+        
+        _reportRepository.Update(report);
+        return await _reportRepository.SaveChangesAsync();
+    }
+    
+    public async Task<bool> RestoreReportAsync(int reportId)
+    {
+        var report = await _reportRepository.GetByIdAsync(reportId);
+        if (report == null || !report.IsDeleted)
+            return false;
+            
+        report.IsDeleted = false;
+        report.DeletedAt = null;
+        report.DeletedById = null;
+        
+        _reportRepository.Update(report);
+        return await _reportRepository.SaveChangesAsync();
+    }
 }
